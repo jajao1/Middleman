@@ -17,6 +17,9 @@ namespace Middleman
         /// <returns>The same IServiceCollection so that multiple calls can be chained.</returns>
         public static IServiceCollection AddMiddleman(this IServiceCollection services, Assembly assemblyToScan)
         {
+            ArgumentNullException.ThrowIfNull(services);
+            ArgumentNullException.ThrowIfNull(assemblyToScan);
+
             return AddMiddleman(services, assemblyToScan, configureOptions: null);
         }
 
@@ -33,6 +36,9 @@ namespace Middleman
             Assembly assemblyToScan,
             Action<MiddlemanOptions>? configureOptions)
         {
+            ArgumentNullException.ThrowIfNull(services);
+            ArgumentNullException.ThrowIfNull(assemblyToScan);
+
             var options = new MiddlemanOptions();
             configureOptions?.Invoke(options);
 
@@ -68,23 +74,16 @@ namespace Middleman
 
         private static void RegisterHandlers(IServiceCollection services, Type handlerInterface, Assembly assembly)
         {
-            assembly.GetTypes()
-                .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces()
-                    .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerInterface))
-                .ToList()
-                .ForEach(handlerType =>
+            foreach (var handlerType in assembly.GetTypes().Where(t =>
+                         t is { IsClass: true, IsAbstract: false } &&
+                         t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerInterface)))
+            {
+                foreach (var serviceType in handlerType.GetInterfaces()
+                             .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerInterface))
                 {
-                    // For each found handler, register all matching implemented interfaces.
-                    var serviceTypes = handlerType.GetInterfaces()
-                        .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerInterface)
-                        .ToList();
-
-                    foreach (var serviceType in serviceTypes)
-                    {
-                        services.AddTransient(serviceType, handlerType);
-                    }
-                });
+                    services.AddTransient(serviceType, handlerType);
+                }
+            }
         }
-
     }
 }

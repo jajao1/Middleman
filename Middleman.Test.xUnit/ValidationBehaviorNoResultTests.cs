@@ -2,11 +2,6 @@ using FluentValidation;
 using Moq;
 using Middleman.FluentValidation;
 using Middleman.Tests.Support;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Middleman.Test.xUnit
 {
@@ -20,7 +15,7 @@ namespace Middleman.Test.xUnit
             var validator = new DeleteUserRequestValidator();
 
             var nextMock = new Mock<RequestHandlerDelegate>();
-            nextMock.Setup(next => next()).Returns(Task.CompletedTask);
+            nextMock.Setup(next => next(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
             var behavior = new ValidationBehaviorNoResult<DeleteUserRequest>(new[] { validator });
 
@@ -28,7 +23,7 @@ namespace Middleman.Test.xUnit
             await behavior.Handle(validRequest, nextMock.Object, CancellationToken.None);
 
             // Assert
-            nextMock.Verify(next => next(), Times.Once);
+            nextMock.Verify(next => next(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -47,7 +42,7 @@ namespace Middleman.Test.xUnit
                 behavior.Handle(invalidRequest, nextMock.Object, CancellationToken.None)
             );
 
-            nextMock.Verify(next => next(), Times.Never);
+            nextMock.Verify(next => next(It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Fact]
@@ -57,7 +52,7 @@ namespace Middleman.Test.xUnit
             var request = new DeleteUserRequest(Guid.NewGuid());
 
             var nextMock = new Mock<RequestHandlerDelegate>();
-            nextMock.Setup(next => next()).Returns(Task.CompletedTask);
+            nextMock.Setup(next => next(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
             var behavior = new ValidationBehaviorNoResult<DeleteUserRequest>(Array.Empty<IValidator<DeleteUserRequest>>());
 
@@ -65,7 +60,7 @@ namespace Middleman.Test.xUnit
             await behavior.Handle(request, nextMock.Object, CancellationToken.None);
 
             // Assert
-            nextMock.Verify(next => next(), Times.Once);
+            nextMock.Verify(next => next(It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

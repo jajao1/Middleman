@@ -19,7 +19,7 @@ namespace Middleman.Test.xUnit
 
             var behavior = new ExceptionHandlingBehavior<ExceptionRequest, string>(new[] { exceptionHandler.Object });
 
-            RequestHandlerDelegate<string> next = () => throw exception;
+            RequestHandlerDelegate<string> next = _ => throw exception;
 
             // Act
             var result = await behavior.Handle(request, next, CancellationToken.None);
@@ -43,7 +43,7 @@ namespace Middleman.Test.xUnit
 
             var behavior = new ExceptionHandlingBehavior<ExceptionRequest, string>(new[] { exceptionHandler.Object });
 
-            RequestHandlerDelegate<string> next = () => throw exception;
+            RequestHandlerDelegate<string> next = _ => throw exception;
 
             // Act / Assert
             await Assert.ThrowsAsync<InvalidOperationException>(
@@ -64,7 +64,7 @@ namespace Middleman.Test.xUnit
 
             var behavior = new ExceptionHandlingBehavior<ExceptionNoResultRequest>(new[] { exceptionHandler.Object });
 
-            RequestHandlerDelegate next = () => throw exception;
+            RequestHandlerDelegate next = _ => throw exception;
 
             // Act
             var thrown = await Record.ExceptionAsync(
@@ -89,7 +89,7 @@ namespace Middleman.Test.xUnit
 
             var behavior = new ExceptionHandlingBehavior<ExceptionNoResultRequest>(new[] { exceptionHandler.Object });
 
-            RequestHandlerDelegate next = () => throw exception;
+            RequestHandlerDelegate next = _ => throw exception;
 
             // Act / Assert
             await Assert.ThrowsAsync<InvalidOperationException>(

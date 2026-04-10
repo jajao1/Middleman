@@ -14,6 +14,8 @@ namespace Middleman
 
         public CachingBehavior(IMemoryCache cache)
         {
+            ArgumentNullException.ThrowIfNull(cache);
+
             _cache = cache;
         }
 
@@ -24,7 +26,7 @@ namespace Middleman
         {
             if (request is not ICacheableRequest<TResponse> cacheableRequest)
             {
-                return await next().ConfigureAwait(false);
+                return await next(cancellationToken).ConfigureAwait(false);
             }
 
             if (_cache.TryGetValue(cacheableRequest.CacheKey, out TResponse? cachedResponse))
@@ -32,7 +34,7 @@ namespace Middleman
                 return cachedResponse!;
             }
 
-            var response = await next().ConfigureAwait(false);
+            var response = await next(cancellationToken).ConfigureAwait(false);
             var entryOptions = BuildEntryOptions(cacheableRequest);
 
             if (entryOptions is null)

@@ -12,7 +12,9 @@ namespace Middleman
 
         public ExceptionHandlingBehavior(IEnumerable<IExceptionHandler<TRequest, TResponse>> handlers)
         {
-            _handlers = handlers;
+            ArgumentNullException.ThrowIfNull(handlers);
+
+            _handlers = handlers as IExceptionHandler<TRequest, TResponse>[] ?? handlers.ToArray();
         }
 
         public async Task<TResponse> Handle(
@@ -22,7 +24,7 @@ namespace Middleman
         {
             try
             {
-                return await next().ConfigureAwait(false);
+                return await next(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -51,7 +53,9 @@ namespace Middleman
 
         public ExceptionHandlingBehavior(IEnumerable<IExceptionHandler<TRequest>> handlers)
         {
-            _handlers = handlers;
+            ArgumentNullException.ThrowIfNull(handlers);
+
+            _handlers = handlers as IExceptionHandler<TRequest>[] ?? handlers.ToArray();
         }
 
         public async Task Handle(
@@ -61,7 +65,7 @@ namespace Middleman
         {
             try
             {
-                await next().ConfigureAwait(false);
+                await next(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

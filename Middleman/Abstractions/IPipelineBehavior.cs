@@ -1,13 +1,13 @@
 namespace Middleman
 {
     // Delegate for the request pipeline with response
-    public delegate Task<TResponse> RequestHandlerDelegate<TResponse>();
+    public delegate Task<TResponse> RequestHandlerDelegate<TResponse>(CancellationToken cancellationToken);
 
     // Delegate for the request pipeline WITHOUT response
-    public delegate Task RequestHandlerDelegate();
+    public delegate Task RequestHandlerDelegate(CancellationToken cancellationToken);
 
     // Delegate for the streaming request pipeline
-    public delegate IAsyncEnumerable<TResponse> StreamHandlerDelegate<TResponse>();
+    public delegate IAsyncEnumerable<TResponse> StreamHandlerDelegate<TResponse>(CancellationToken cancellationToken);
 
     // Interface for behaviors of requests WITH response
     public interface IPipelineBehavior<in TRequest, TResponse> where TRequest : IRequest<TResponse>

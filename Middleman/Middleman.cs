@@ -14,12 +14,16 @@ namespace Middleman
 
         public Middleman(IServiceProvider serviceProvider)
         {
+            ArgumentNullException.ThrowIfNull(serviceProvider);
+
             _serviceProvider = serviceProvider;
             _options = serviceProvider.GetService<MiddlemanOptions>() ?? new MiddlemanOptions();
         }
 
         public async Task Publish(INotification notification, CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(notification);
+
             var notificationType = notification.GetType();
             var handlerType = typeof(INotificationHandler<>).MakeGenericType(notificationType);
 
@@ -57,13 +61,15 @@ namespace Middleman
 
         public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(request);
+
             var requestType = request.GetType();
 
             var handlerType = typeof(IRequestHandler<,>).MakeGenericType(requestType, typeof(TResponse));
             var handler = _serviceProvider.GetService(handlerType)
                 ?? throw new InvalidOperationException($"No handler found for request type {requestType.Name}");
 
-            RequestHandlerDelegate<TResponse> handlerDelegate = () =>
+            RequestHandlerDelegate<TResponse> handlerDelegate = token =>
             {
                 var handleMethod = handler.GetType().GetMethod("Handle", [requestType, typeof(CancellationToken)]);
                 if (handleMethod is null)
@@ -71,7 +77,7 @@ namespace Middleman
                     throw new InvalidOperationException($"Method 'Handle' not found on handler '{handler.GetType().Name}'");
                 }
 
-                var task = handleMethod.Invoke(handler, [request, cancellationToken]) as Task<TResponse>;
+                var task = handleMethod.Invoke(handler, [request, token]) as Task<TResponse>;
                 if (task is null)
                 {
                     throw new InvalidOperationException($"Handler '{handler.GetType().Name}' returned an invalid task.");
@@ -88,7 +94,7 @@ namespace Middleman
 
             var pipeline = behaviors.Aggregate(
                 handlerDelegate,
-                (next, behavior) => () =>
+                (next, behavior) => token =>
                 {
                     var handleMethod = behaviorType.GetMethod(
                         "Handle",
@@ -100,7 +106,7 @@ namespace Middleman
                             $"Method 'Handle' not found on behavior '{behavior.GetType().Name}'.");
                     }
 
-                    var task = handleMethod.Invoke(behavior, [request, next, cancellationToken]) as Task<TResponse>;
+                    var task = handleMethod.Invoke(behavior, [request, next, token]) as Task<TResponse>;
                     if (task is null)
                     {
                         throw new InvalidOperationException(
@@ -110,18 +116,20 @@ namespace Middleman
                     return task;
                 });
 
-            return pipeline();
+            return pipeline(cancellationToken);
         }
 
         public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(request);
+
             var requestType = request.GetType();
 
             var handlerType = typeof(IStreamRequestHandler<,>).MakeGenericType(requestType, typeof(TResponse));
             var handler = _serviceProvider.GetService(handlerType)
                 ?? throw new InvalidOperationException($"No stream handler found for request type {requestType.Name}");
 
-            StreamHandlerDelegate<TResponse> handlerDelegate = () =>
+            StreamHandlerDelegate<TResponse> handlerDelegate = token =>
             {
                 var handleMethod = handler.GetType().GetMethod("Handle", [requestType, typeof(CancellationToken)]);
                 if (handleMethod is null)
@@ -129,7 +137,7 @@ namespace Middleman
                     throw new InvalidOperationException($"Method 'Handle' not found on stream handler '{handler.GetType().Name}'");
                 }
 
-                var stream = handleMethod.Invoke(handler, [request, cancellationToken]) as IAsyncEnumerable<TResponse>;
+                var stream = handleMethod.Invoke(handler, [request, token]) as IAsyncEnumerable<TResponse>;
                 if (stream is null)
                 {
                     throw new InvalidOperationException($"Stream handler '{handler.GetType().Name}' returned an invalid stream.");
@@ -146,7 +154,7 @@ namespace Middleman
 
             var pipeline = behaviors.Aggregate(
                 handlerDelegate,
-                (next, behavior) => () =>
+                (next, behavior) => token =>
                 {
                     var handleMethod = behaviorType.GetMethod(
                         "Handle",
@@ -158,7 +166,7 @@ namespace Middleman
                             $"Method 'Handle' not found on stream behavior '{behavior.GetType().Name}'.");
                     }
 
-                    var stream = handleMethod.Invoke(behavior, [request, next, cancellationToken]) as IAsyncEnumerable<TResponse>;
+                    var stream = handleMethod.Invoke(behavior, [request, next, token]) as IAsyncEnumerable<TResponse>;
                     if (stream is null)
                     {
                         throw new InvalidOperationException(
@@ -168,18 +176,20 @@ namespace Middleman
                     return stream;
                 });
 
-            return pipeline();
+            return pipeline(cancellationToken);
         }
 
         public Task Send(IRequest request, CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(request);
+
             var requestType = request.GetType();
 
             var handlerType = typeof(IRequestHandler<>).MakeGenericType(requestType);
             var handler = _serviceProvider.GetService(handlerType)
                 ?? throw new InvalidOperationException($"No handler found for request type {requestType.Name}");
 
-            RequestHandlerDelegate handlerDelegate = () =>
+            RequestHandlerDelegate handlerDelegate = token =>
             {
                 var handleMethod = handler.GetType().GetMethod("Handle", [requestType, typeof(CancellationToken)]);
                 if (handleMethod is null)
@@ -187,7 +197,7 @@ namespace Middleman
                     throw new InvalidOperationException($"Method 'Handle' not found on handler '{handler.GetType().Name}'");
                 }
 
-                var task = handleMethod.Invoke(handler, [request, cancellationToken]) as Task;
+                var task = handleMethod.Invoke(handler, [request, token]) as Task;
                 if (task is null)
                 {
                     throw new InvalidOperationException($"Handler '{handler.GetType().Name}' returned an invalid task.");
@@ -204,7 +214,7 @@ namespace Middleman
 
             var pipeline = behaviors.Aggregate(
                 handlerDelegate,
-                (next, behavior) => () =>
+                (next, behavior) => token =>
                 {
                     var handleMethod = behaviorType.GetMethod(
                         "Handle",
@@ -216,7 +226,7 @@ namespace Middleman
                             $"Method 'Handle' not found on behavior '{behavior.GetType().Name}'.");
                     }
 
-                    var task = handleMethod.Invoke(behavior, [request, next, cancellationToken]) as Task;
+                    var task = handleMethod.Invoke(behavior, [request, next, token]) as Task;
                     if (task is null)
                     {
                         throw new InvalidOperationException(
@@ -226,7 +236,7 @@ namespace Middleman
                     return task;
                 });
 
-            return pipeline();
+            return pipeline(cancellationToken);
         }
 
         private Task InvokeNotificationHandler(MethodInfo handleMethod, object handler, INotification notification, CancellationToken cancellationToken)
