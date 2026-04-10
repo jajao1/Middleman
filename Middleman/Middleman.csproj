@@ -8,7 +8,7 @@
 
 	  <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	  <PackageId>Middleman</PackageId>
-	  <Version>1.0.2</Version>
+	  <Version>1.0.3</Version>
 	  <Authors>João</Authors>
 	  <Company>Slere</Company>
 	  <Description>Middleman is a lightweight .NET library that acts as a central dispatcher for requests and notifications. It allows you to decouple business logic, resulting in a more organized, testable, and maintainable architecture that follows the principles of CQRS and event-driven design.</Description>
