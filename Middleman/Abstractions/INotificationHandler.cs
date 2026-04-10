@@ -13,6 +13,6 @@ namespace Middleman
         /// <param name="notification">The notification object.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A task that represents the completion of the handling process.</returns>
-        Task Handle(TNotification notification, CancellationToken cancellationToken);
+        Task Handle(TNotification notification, CancellationToken cancellationToken = default);
     }
 }

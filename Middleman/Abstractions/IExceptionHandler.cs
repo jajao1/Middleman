@@ -19,7 +19,7 @@ namespace Middleman
         Task<ExceptionHandlerState<TResponse>> Handle(
             TRequest request,
             Exception exception,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -38,6 +38,6 @@ namespace Middleman
         Task<ExceptionHandlerState> Handle(
             TRequest request,
             Exception exception,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default);
     }
 }

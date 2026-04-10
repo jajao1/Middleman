@@ -14,6 +14,6 @@ namespace Middleman
         /// <param name="request">The stream request object.</param>
         /// <param name="cancellationToken">Token to monitor for cancellation requests.</param>
         /// <returns>An async stream of response items.</returns>
-        IAsyncEnumerable<TResponse> Handle(TRequest request, CancellationToken cancellationToken);
+        IAsyncEnumerable<TResponse> Handle(TRequest request, CancellationToken cancellationToken = default);
     }
 }

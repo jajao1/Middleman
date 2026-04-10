@@ -1,29 +1,29 @@
 namespace Middleman
 {
     // Delegate for the request pipeline with response
-    public delegate Task<TResponse> RequestHandlerDelegate<TResponse>(CancellationToken cancellationToken);
+    public delegate Task<TResponse> RequestHandlerDelegate<TResponse>(CancellationToken cancellationToken = default);
 
     // Delegate for the request pipeline WITHOUT response
-    public delegate Task RequestHandlerDelegate(CancellationToken cancellationToken);
+    public delegate Task RequestHandlerDelegate(CancellationToken cancellationToken = default);
 
     // Delegate for the streaming request pipeline
-    public delegate IAsyncEnumerable<TResponse> StreamHandlerDelegate<TResponse>(CancellationToken cancellationToken);
+    public delegate IAsyncEnumerable<TResponse> StreamHandlerDelegate<TResponse>(CancellationToken cancellationToken = default);
 
     // Interface for behaviors of requests WITH response
     public interface IPipelineBehavior<in TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken);
+        Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default);
     }
 
     // Interface for behaviors of requests WITHOUT response
     public interface IPipelineBehavior<in TRequest> where TRequest : IRequest
     {
-        Task Handle(TRequest request, RequestHandlerDelegate next, CancellationToken cancellationToken);
+        Task Handle(TRequest request, RequestHandlerDelegate next, CancellationToken cancellationToken = default);
     }
 
     // Interface for behaviors of streaming requests
     public interface IStreamPipelineBehavior<in TRequest, TResponse> where TRequest : IStreamRequest<TResponse>
     {
-        IAsyncEnumerable<TResponse> Handle(TRequest request, StreamHandlerDelegate<TResponse> next, CancellationToken cancellationToken);
+        IAsyncEnumerable<TResponse> Handle(TRequest request, StreamHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default);
     }
 }
