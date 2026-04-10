@@ -1,4 +1,4 @@
-# Middleman 🤝
+# <img src="logo.png" alt="Middleman Logo" width="48" height="48" align="center"> Middleman 🤝
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
