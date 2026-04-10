@@ -16,7 +16,7 @@
 	  <PackageIcon>logo.png</PackageIcon>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
-	  <PackageProjectUrl>https://github.com/jajao1/Middleman</PackageProjectUrl>
+	  <PackageProjectUrl>https://jajao1.github.io/jtech.github.io/</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/jajao1/Middleman.git</RepositoryUrl>
 	  <RepositoryType>git</RepositoryType>
   </PropertyGroup>
