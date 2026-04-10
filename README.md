@@ -1,4 +1,4 @@
-# ![Middleman Logo](https://raw.githubusercontent.com/jajao1/Middleman/main/logo.png) Middleman 🤝
+# <img src="https://raw.githubusercontent.com/jajao1/Middleman/main/logo.png" alt="Middleman Logo" width="48" height="48" align="center" /> Middleman 🤝
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
