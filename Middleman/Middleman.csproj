@@ -8,11 +8,12 @@
 
 	  <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	  <PackageId>Middleman</PackageId>
-	  <Version>1.0.3</Version>
+	  <Version>1.0.4</Version>
 	  <Authors>João</Authors>
 	  <Company>Slere</Company>
 	  <Description>Middleman is a lightweight .NET library that acts as a central dispatcher for requests and notifications. It allows you to decouple business logic, resulting in a more organized, testable, and maintainable architecture that follows the principles of CQRS and event-driven design.</Description>
 	  <PackageTags>cqrs;mediator;messaging;in-process;dispatcher;request;notification</PackageTags>
+	  <PackageIcon>logo.png</PackageIcon>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageProjectUrl>https://github.com/jajao1/Middleman</PackageProjectUrl>
@@ -24,6 +25,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.9" />
 	  <None Include="..\LICENSE" Pack="true" PackagePath="\"/>
 	  <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    <None Include="..\logo.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0' Or '$(TargetFramework)' == 'net9.0' Or '$(TargetFramework)' == 'net8.0'">
