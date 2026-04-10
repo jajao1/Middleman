@@ -12,7 +12,7 @@ namespace Middleman
 
         public ExceptionHandlingBehavior(IEnumerable<IExceptionHandler<TRequest, TResponse>> handlers)
         {
-            ArgumentNullException.ThrowIfNull(handlers);
+            if (handlers == null) throw new ArgumentNullException(nameof(handlers));
 
             _handlers = handlers as IExceptionHandler<TRequest, TResponse>[] ?? handlers.ToArray();
         }
@@ -53,7 +53,7 @@ namespace Middleman
 
         public ExceptionHandlingBehavior(IEnumerable<IExceptionHandler<TRequest>> handlers)
         {
-            ArgumentNullException.ThrowIfNull(handlers);
+            if (handlers == null) throw new ArgumentNullException(nameof(handlers));
 
             _handlers = handlers as IExceptionHandler<TRequest>[] ?? handlers.ToArray();
         }

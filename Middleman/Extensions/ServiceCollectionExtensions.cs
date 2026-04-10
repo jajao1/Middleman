@@ -17,8 +17,8 @@ namespace Middleman
         /// <returns>The same IServiceCollection so that multiple calls can be chained.</returns>
         public static IServiceCollection AddMiddleman(this IServiceCollection services, Assembly assemblyToScan)
         {
-            ArgumentNullException.ThrowIfNull(services);
-            ArgumentNullException.ThrowIfNull(assemblyToScan);
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (assemblyToScan == null) throw new ArgumentNullException(nameof(assemblyToScan));
 
             return AddMiddleman(services, assemblyToScan, configureOptions: null);
         }
@@ -36,8 +36,8 @@ namespace Middleman
             Assembly assemblyToScan,
             Action<MiddlemanOptions>? configureOptions)
         {
-            ArgumentNullException.ThrowIfNull(services);
-            ArgumentNullException.ThrowIfNull(assemblyToScan);
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (assemblyToScan == null) throw new ArgumentNullException(nameof(assemblyToScan));
 
             var options = new MiddlemanOptions();
             configureOptions?.Invoke(options);

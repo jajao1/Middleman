@@ -9,7 +9,7 @@ namespace Middleman.FluentValidation
 
         public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
         {
-            ArgumentNullException.ThrowIfNull(validators);
+            if (validators == null) throw new ArgumentNullException(nameof(validators));
 
             _validators = validators as IValidator<TRequest>[] ?? validators.ToArray();
         }
@@ -45,7 +45,7 @@ namespace Middleman.FluentValidation
 
         public ValidationBehaviorNoResult(IEnumerable<IValidator<TRequest>> validators)
         {
-            ArgumentNullException.ThrowIfNull(validators);
+            if (validators == null) throw new ArgumentNullException(nameof(validators));
 
             _validators = validators as IValidator<TRequest>[] ?? validators.ToArray();
         }

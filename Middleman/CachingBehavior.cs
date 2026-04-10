@@ -14,7 +14,7 @@ namespace Middleman
 
         public CachingBehavior(IMemoryCache cache)
         {
-            ArgumentNullException.ThrowIfNull(cache);
+            if (cache == null) throw new ArgumentNullException(nameof(cache));
 
             _cache = cache;
         }

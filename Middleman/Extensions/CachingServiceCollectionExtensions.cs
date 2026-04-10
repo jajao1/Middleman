@@ -15,7 +15,7 @@ namespace Middleman
             this IServiceCollection services,
             Action<MemoryCacheOptions>? configureCache = null)
         {
-            ArgumentNullException.ThrowIfNull(services);
+            if (services == null) throw new ArgumentNullException(nameof(services));
 
             if (configureCache is null)
             {

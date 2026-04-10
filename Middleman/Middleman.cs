@@ -14,7 +14,7 @@ namespace Middleman
 
         public Middleman(IServiceProvider serviceProvider)
         {
-            ArgumentNullException.ThrowIfNull(serviceProvider);
+            if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
 
             _serviceProvider = serviceProvider;
             _options = serviceProvider.GetService<MiddlemanOptions>() ?? new MiddlemanOptions();
@@ -22,7 +22,7 @@ namespace Middleman
 
         public async Task Publish(INotification notification, CancellationToken cancellationToken = default)
         {
-            ArgumentNullException.ThrowIfNull(notification);
+            if (notification == null) throw new ArgumentNullException(nameof(notification));
 
             var notificationType = notification.GetType();
             var handlerType = typeof(INotificationHandler<>).MakeGenericType(notificationType);
@@ -61,7 +61,7 @@ namespace Middleman
 
         public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
-            ArgumentNullException.ThrowIfNull(request);
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
             var requestType = request.GetType();
 
@@ -121,7 +121,7 @@ namespace Middleman
 
         public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
-            ArgumentNullException.ThrowIfNull(request);
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
             var requestType = request.GetType();
 
@@ -181,7 +181,7 @@ namespace Middleman
 
         public Task Send(IRequest request, CancellationToken cancellationToken = default)
         {
-            ArgumentNullException.ThrowIfNull(request);
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
             var requestType = request.GetType();
 
